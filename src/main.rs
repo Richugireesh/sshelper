@@ -8,7 +8,7 @@ fn main() {
 
 // function to read from a json file
 fn read_json() -> String {
-    let mut file = File::open("data.json").expect("file not found");
+    let mut file = File::open("data/connections.json").expect("file not found");
     let mut contents = String::new();
     file.read_to_string(&mut contents)
         .expect("something went wrong reading the file");
