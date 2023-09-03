@@ -15,7 +15,6 @@ struct Connection {
     host: String,
     port: u32,
     username: String,
-    password: Option<String>,
     key_path: Option<String>,
 }
 
@@ -63,7 +62,6 @@ fn add_connection(data: &mut Data, file_path: &str) {
     let mut host = String::new();
     let mut port = String::new();
     let mut username = String::new();
-    let mut password = String::new();
     let mut key_path = String::new();
 
     println!("Enter connection details:");
@@ -80,10 +78,7 @@ fn add_connection(data: &mut Data, file_path: &str) {
     print!("Username: ");
     stdout().flush().unwrap();
     read_input(&mut username, "Username");
-    print!("Password: ");
-    stdout().flush().unwrap();
-    read_input(&mut password, "Password");
-    print!("Key Path: ");
+    print!("Absolute Key Path: ");
     stdout().flush().unwrap();
     read_input(&mut key_path, "Key Path");
     let new_connection = Connection {
@@ -91,7 +86,6 @@ fn add_connection(data: &mut Data, file_path: &str) {
         host: host.trim().to_string(),
         port: port,
         username: username.trim().to_string(),
-        password: Some(password.trim().to_string()),
         key_path: Some(key_path.trim().to_string()),
     };
     data.connections.push(new_connection);
@@ -121,21 +115,24 @@ fn list_connection_names(data: &Data) {
         println!("Host:{}", connection.host);
     }
 }
-
 fn connect_to_ssh(data: &Data, name: &str) {
     if let Some(connection) = data.connections.iter().find(|c| c.name == name) {
         println!("Trying to connect to {}", connection.name);
-        let ssh_command = format!(
-            "ssh -v {}@{} -p {}",
-            connection.username, connection.host, connection.port
-        );
+        let ssh_command = if let Some(key_path) = &connection.key_path {
+            format!(
+                "ssh -v -i {} {}@{} -p {}",
+                key_path, connection.username, connection.host, connection.port
+            )
+        } else {
+            format!(
+                "ssh -v {}@{} -p {}",
+                connection.username, connection.host, connection.port
+            )
+        };
         println!("SSH Command: {}", ssh_command);
         println!("Username: {}", connection.username);
         println!("Host: {}", connection.host);
         println!("Port: {}", connection.port);
-        if let Some(password) = &connection.password {
-            println!("Password: {}", password);
-        }
         if let Some(key_path) = &connection.key_path {
             println!("Key Path: {}", key_path);
         }
@@ -153,4 +150,3 @@ fn connect_to_ssh(data: &Data, name: &str) {
         println!("No connection found with the name: {}", name);
     }
 }
-
