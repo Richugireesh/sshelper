@@ -3,7 +3,7 @@ use serde_json::{self, to_string_pretty};
 use std::{
     env,
     fs::File,
-    io::{self, BufReader, Read, Write},
+    io::{BufReader, Read, Write, stdout, stdin},
     process::{Command, exit, Stdio},
 };
 
@@ -68,23 +68,23 @@ fn add_connection(data: &mut Data, file_path: &str) {
 
     println!("Enter connection details:");
     print!("Name: ");
-    io::stdout().flush().unwrap();
+    stdout().flush().unwrap();
     read_input(&mut name, "Name");
     print!("Host: ");
-    io::stdout().flush().unwrap();
+    stdout().flush().unwrap();
     read_input(&mut host, "Host");
     print!("Port: ");
-    io::stdout().flush().unwrap();
+    stdout().flush().unwrap();
     read_input(&mut port, "Port");
     let port: u32 = port.trim().parse().expect("Failed to parse Port as u32");
     print!("Username: ");
-    io::stdout().flush().unwrap();
+    stdout().flush().unwrap();
     read_input(&mut username, "Username");
     print!("Password: ");
-    io::stdout().flush().unwrap();
+    stdout().flush().unwrap();
     read_input(&mut password, "Password");
     print!("Key Path: ");
-    io::stdout().flush().unwrap();
+    stdout().flush().unwrap();
     read_input(&mut key_path, "Key Path");
     let new_connection = Connection {
         name: name.trim().to_string(),
@@ -106,7 +106,7 @@ fn save_to_json(data: &Data, file_path: &str) {
 }
 
 fn read_input(input: &mut String, field_name: &str) {
-    match io::stdin().read_line(input) {
+    match stdin().read_line(input) {
         Ok(_) => {}
         Err(e) => {
             println!("Failed to read line for {}: {}", field_name, e);
