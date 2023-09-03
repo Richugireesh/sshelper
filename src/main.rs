@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::Read;
+use std::env;
 
 use serde_derive::{Deserialize, Serialize};
 
@@ -19,8 +20,9 @@ struct Data {
 }
 
 fn main() {
-    println!("Hello, world!");
-    let data = read_and_parse_json("data/connections.json");
+    let home_dir = env::var("HOME").unwrap();
+    let file_path = format!("{}/.config/sshelper/connections.json", home_dir);
+    let data = read_and_parse_json(&file_path);
     println!("{:?}", data);
 }
 
@@ -28,6 +30,7 @@ fn main() {
 fn read_and_parse_json(file_path: &str) -> Data {
     let mut file = File::open(file_path).expect("File not found");
     let mut contents = String::new();
+    
     file.read_to_string(&mut contents)
         .expect("Something went wrong reading the file");
     let parsed_data: Data = serde_json::from_str(&contents).unwrap();
