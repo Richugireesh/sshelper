@@ -1,0 +1,36 @@
+{
+    "connections": [
+        {
+            "name": "test1",
+            "host": "10.0.0.1",
+            "port": 22,
+            "username": "testuser",
+            "password": "",
+            "keyPath": ""
+        },
+        {
+            "name": "test2",
+            "host": "10.0.0.1",
+            "port": 22,
+            "username": "testuser",
+            "password": "y+29RZkn2U6RzhVI+MDzv34Qf2vKiZWjTC0u48rJe4O0Ive4Yr3OMg==",
+            "keyPath": ""
+        },
+        {
+            "name": "test3",
+            "host": "10.0.0.1",
+            "port": 22,
+            "username": "testuser",
+            "password": "VvktmUgZyBX7//W5a3LA0UKfXd0kSLa4D4SfcuAJFg4SVbuI2rbPgtFimX16L8w2lWe+Z48sMJ2wCp552jzZFQ==",
+            "keyPath": ""
+        },
+        {
+            "name": "test4",
+            "host": "10.0.0.1",
+            "port": 22,
+            "username": "testuser",
+            "password": "2Bhg0GWB7hq/KE+bztLkYV+yX/HbxUVrtDTxDw==",
+            "keyPath": "/home/richu/test-ssh-key"
+        }
+    ]
+}
