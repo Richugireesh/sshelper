@@ -28,3 +28,16 @@ The `Data` struct contains a vector of `Connection` structs. This allows `sshelp
 
 The connection details are stored in a JSON file located at `~/.config/sshelper/connections.json`.
 
+## To-Do
+
+- Implement a `delete` command to remove saved connections.
+- Add support for connection groups.
+- Improve error handling and user feedback.
+- Add a `help` command to display usage information.
+- Implement unit tests for all commands.
+- Add support for encrypted password storage.
+- Add support for password-based ssh connections.
+- Add support for TUI(Maybe).
+
+
+
