@@ -3,7 +3,7 @@ use serde_json::{self, to_string_pretty};
 use std::{
     env,
     fs::File,
-    io::{BufReader, Read, Write, stdout, stdin},
+    io::{BufReader, Write, stdout, stdin},
     process::{Command, exit, Stdio},
 };
 
@@ -49,12 +49,8 @@ fn main() {
 
 fn read_and_parse_json() -> Data {
     let file = File::open(&*FILE_PATH).expect("File not found");
-    let mut buf_reader = BufReader::new(file);
-    let mut contents = String::new();
-    buf_reader
-        .read_to_string(&mut contents)
-        .expect("Unable to read file");
-    serde_json::from_str(&contents).unwrap()
+    let buf_reader = BufReader::new(file);
+    serde_json::from_reader(buf_reader).expect("Unable to read file")
 }
 
 fn add_connection(data: &mut Data, file_path: &str) {
