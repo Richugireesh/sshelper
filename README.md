@@ -30,7 +30,7 @@ The connection details are stored in a JSON file located at `~/.config/sshelper/
 
 ## To-Do
 
-- Implement a `delete` command to remove saved connections.
+- Implement a `delete` command to remove saved connections. ✅
 - Add support for Windows.
 - Improve error handling and user feedback.
 - Add a `help` command to display usage information.
