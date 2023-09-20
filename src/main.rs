@@ -49,7 +49,14 @@ fn main() {
                 println!("Please provide a connection name"); // Error message
             }
         }
-        _ => println!("Invalid command. Use 'add', 'list' or 'connect'"), // Default case
+        Some("delete") => { // Connect to a connection
+            if let Some(name) = args.get(2) {
+                delete_ssh_connect(&mut data, name); // Delete SSH connection
+            } else {
+                println!("Please provide a connection name"); // Error message
+            }
+        }
+        _ => println!("Invalid command. Use 'add', 'delete', 'list' or 'connect'"), // Default case
     }
 }
 
@@ -159,3 +166,13 @@ fn connect_to_ssh(data: &Data, name: &str) {
     }
 }
 
+// Function to delete a SSH connnection
+fn delete_ssh_connect(data: &mut Data, name: &str) {
+    if let Some(index) = data.connections.iter().position(|c| c.name == name) { // If the connection exists
+        println!("Trying to delete {}", data.connections[index].name); // Print the connection name
+        data.connections.remove(index);
+        save_to_json(data, &*FILE_PATH); // Save the list to the JSON file
+    } else {
+        println!("No connection found with the name: {}", name); // Error message
+    }
+}
