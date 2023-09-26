@@ -2,10 +2,10 @@
 use serde_derive::{Deserialize, Serialize}; // For JSON serialization and deserialization
 use serde_json::{self, to_string_pretty}; // For handling JSON data
 use std::{
-    env, // For accessing environment variables
-    fs::File, // For handling file operations
-    io::{BufReader, Write, stdout, stdin}, // For input/output operations
-    process::{Command, exit, Stdio}, // For handling system processes
+    env,                                   // For accessing environment variables
+    fs::File,                              // For handling file operations
+    io::{stdin, stdout, BufReader, Write}, // For input/output operations
+    process::{exit, Command, Stdio},       // For handling system processes
 };
 
 // For handling static variables
@@ -14,10 +14,10 @@ use lazy_static::lazy_static;
 // Struct to hold connection details
 #[derive(Debug, Deserialize, Serialize)]
 struct Connection {
-    name: String, // Name of the connection
-    host: String, // Host of the connection
-    port: u32, // Port number for the connection
-    username: String, // Username for the connection
+    name: String,             // Name of the connection
+    host: String,             // Host of the connection
+    port: u32,                // Port number for the connection
+    username: String,         // Username for the connection
     key_path: Option<String>, // Path to the key file (if any)
 }
 
@@ -39,17 +39,20 @@ lazy_static! {
 fn main() {
     let mut data = read_and_parse_json(); // Read and parse the JSON file
     let args: Vec<String> = env::args().collect(); // Collect command line arguments
-    match args.get(1).map(String::as_str) { // Match the command
+    match args.get(1).map(String::as_str) {
+        // Match the command
         Some("add") => add_connection(&mut data, &*FILE_PATH), // Add a new connection
-        Some("list") => list_connection_names(&data), // List all connections
-        Some("connect") => { // Connect to a connection
+        Some("list") => list_connection_names(&data),          // List all connections
+        Some("connect") => {
+            // Connect to a connection
             if let Some(name) = args.get(2) {
                 connect_to_ssh(&data, name); // Connect to the SSH
             } else {
                 println!("Please provide a connection name"); // Error message
             }
         }
-        Some("delete") => { // Connect to a connection
+        Some("delete") => {
+            // Connect to a connection
             if let Some(name) = args.get(2) {
                 delete_ssh_connect(&mut data, name); // Delete SSH connection
             } else {
@@ -92,7 +95,8 @@ fn add_connection(data: &mut Data, file_path: &str) {
     print!("Absolute Key Path: ");
     stdout().flush().unwrap();
     read_input(&mut key_path, "Key Path"); // Read the key path
-    let new_connection = Connection { // Create a new connection
+    let new_connection = Connection {
+        // Create a new connection
         name: name.trim().to_string(),
         host: host.trim().to_string(),
         port: port,
@@ -113,7 +117,8 @@ fn save_to_json(data: &Data, file_path: &str) {
 
 // Function to read input from the user
 fn read_input(input: &mut String, field_name: &str) {
-    match stdin().read_line(input) { // Read the input
+    match stdin().read_line(input) {
+        // Read the input
         Ok(_) => {}
         Err(e) => {
             println!("Failed to read line for {}: {}", field_name, e); // Error message
@@ -124,16 +129,19 @@ fn read_input(input: &mut String, field_name: &str) {
 
 // Function to list all connection names
 fn list_connection_names(data: &Data) {
-    for connection in &data.connections { // For each connection
+    for connection in &data.connections {
+        // For each connection
         println!("Name:{}", connection.name); // Print the name
         println!("Host:{}", connection.host); // Print the host
     }
 }
 // Function to connect to a SSH
 fn connect_to_ssh(data: &Data, name: &str) {
-    if let Some(connection) = data.connections.iter().find(|c| c.name == name) { // If the connection exists
+    if let Some(connection) = data.connections.iter().find(|c| c.name == name) {
+        // If the connection exists
         println!("Trying to connect to {}", connection.name); // Print the connection name
-        let ssh_command = if let Some(key_path) = &connection.key_path { // If the key path exists
+        let ssh_command = if let Some(key_path) = &connection.key_path {
+            // If the key path exists
             format!(
                 "ssh -v -i {} {}@{} -p {}", // Format the SSH command
                 key_path, connection.username, connection.host, connection.port
@@ -168,7 +176,8 @@ fn connect_to_ssh(data: &Data, name: &str) {
 
 // Function to delete a SSH connnection
 fn delete_ssh_connect(data: &mut Data, name: &str) {
-    if let Some(index) = data.connections.iter().position(|c| c.name == name) { // If the connection exists
+    if let Some(index) = data.connections.iter().position(|c| c.name == name) {
+        // If the connection exists
         println!("Trying to delete {}", data.connections[index].name); // Print the connection name
         data.connections.remove(index);
         save_to_json(data, &*FILE_PATH); // Save the list to the JSON file
